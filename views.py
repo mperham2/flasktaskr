@@ -83,4 +83,26 @@ def new_task():
         flash('New entry was successfully posted. Thanks.')
         return redirect(url_for('tasks'))
 
+# Mark tasks as complete:
+@app.route('/complete/<int:task_id>/',)
+@login_required
+def complete(task_id):
+    g.db.execute(
+                 'update tasks set status = 0 where task_id='+str(task_id)
+                 )
+    g.db.commit()
+    g.db.close()
+    flash('The task was marked as complete')
+    return(url_for('tasks'))
+
+    # Delete tasks:
+    @app.route('/delete/<int:task_id>/',)
+    @login_required
+    def delete_entry(task_id):
+        g.db = connect.db()
+        g.db.execute('delete from tasks where task_id='+str(task_id))
+        g.db.commit()
+        g.db.close()
+        flash('The task was deleted.')
+        return redirect(url_for('tasks'))
 

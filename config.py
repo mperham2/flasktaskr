@@ -6,8 +6,7 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 DATABASE = 'flasktasker.db'
-USERNAME = 'admin'
-PASSWORD = 'admin'
+
 WTF_CSRF_ENABLED = True
 SECRET_KEY = 'wwACIw6U8l3MDoO9D0huJL2s4pQz3J5g'
 

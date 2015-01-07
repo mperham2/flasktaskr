@@ -20,8 +20,9 @@
                     <tr>
                         <th width="200px"><strong>Task Name</strong></th>
                         <th width="75px"><strong>Due Date</strong></th>
-                        <th width="50px"><strong>Posted Date</strong></th>
-                        <th width="90px"><strong>Priority</strong></th>
+                        <th width="100px"><strong>Posted Date</strong></th>
+                        <th width="50px"><strong>Priority</strong></th>
+                        <th width="90px"><strong>Posted By</strong></th>
                         <th><strong>Actions</strong></th>
                     </tr>
                 </thead>
@@ -29,6 +30,7 @@
                     <tr>
                         <td width="200px">{{o.name}}</td>
                         <td width="75px">{{o.due_date}}</td>
+                        <td width="100px">{{o.posted_date}}</td>
                         <td width="50px">{{o.priority}}</td>
                         <td width="90px">{{o.poster.name}}</td>
                         <td>

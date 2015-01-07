@@ -149,3 +149,7 @@ def delete_entry(task_id):
     flash('The task was deleted. Why not add a new one?')
     return redirect(url_for('tasks'))
 
+def flash_errors(form):
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(u"Error in the %s field - %s" % (getattr(form, field).label.text, error), 'error')

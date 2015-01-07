@@ -9,6 +9,7 @@ from flask import Flask, flash, redirect, render_template, request, \
 from functools import wraps
 from flask.ext.sqlalchemy import SQLAlchemy
 from forms import AddTaskForm, RegisterForm, LoginForm
+import datetime
 
 
 ################
@@ -117,6 +118,8 @@ def new_task():
                             form.name.data,
                             form.due_date.data,
                             form.priority.data,
+                            datetime.datetime.utcnow(),
+                            '1',
                             '1'
                         )
             db.session.add(new_task)

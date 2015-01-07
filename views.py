@@ -37,6 +37,7 @@ def login_required(test):
 @app.route('/logout/')
 def logout():
     session.pop('logged_in', None)
+    session.pop('user_id', None)
     flash('You are logged out. Bye.')
     return redirect(url_for('login'))
 
@@ -59,6 +60,7 @@ def login():
                 )
             else:
                 session['logged_in'] = True
+                session['user_id'] = u.id
                 flash('You are logged in. Go crazy.')
                 return redirect(url_for('tasks'))
         else:
@@ -120,7 +122,7 @@ def new_task():
                             form.priority.data,
                             datetime.datetime.utcnow(),
                             '1',
-                            '1'
+                            session['user_id']
                         )
             db.session.add(new_task)
             db.session.commit()

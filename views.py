@@ -9,7 +9,6 @@ from flask import Flask, flash, redirect, render_template, request, \
 from functools import wraps
 from flask.ext.sqlalchemy import SQLAlchemy
 from forms import AddTaskForm, RegisterForm, LoginForm
-import datetime
 
 
 ################
@@ -113,6 +112,8 @@ def tasks():
 @app.route('/add/', methods=['GET', 'POST'])
 @login_required
 def new_task():
+    import datetime
+    error = None
     form = AddTaskForm(request.form)
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -127,7 +128,11 @@ def new_task():
             db.session.add(new_task)
             db.session.commit()
             flash('New entry was successfully posted. Thanks.')
-    return redirect(url_for('tasks'))
+            return redirect(url_for('tasks'))
+        else:
+            return render_template('tasks.html', form=form, error=error)
+    if request.method == 'GET':
+        return render_template('tasks.html', form=form)
 
 # Mark tasks as complete:
 @app.route('/complete/<int:task_id>/',)

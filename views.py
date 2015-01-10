@@ -144,9 +144,13 @@ def new_task():
 @login_required
 def complete(task_id):
     new_id = task_id
-    db.session.query(Task).filter_by(task_id=new_id).update({"status":"0"})
-    db.session.commit()
-    flash('The task was marked as complete. Nice.')
+    task = db.session.query(Task).filter_by(task_id=new_id)
+    if session['user_id'] == task.first().user_id:
+        task.update({"status":"0"})
+        db.session.commit()
+        flash('The task was marked as complete. Nice.')
+    else:
+        flash('That task belongs to another user.')
     return redirect(url_for('tasks'))
 
 # Delete tasks:

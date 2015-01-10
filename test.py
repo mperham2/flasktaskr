@@ -69,12 +69,17 @@ class AllTests(unittest.TestCase):
         self.assertIn('Please register to start a task list',
                       response.data)
 
-    def test_user_registration(self):
+    def test_duplicate_user_registration_throws_error(self):
         self.app.get('register/', follow_redirects=True)
         response = self.register('Michael', 'michael@realpython.com', 'python', 'python')
         self.app.get('register/', follow_redirects=True)
         response = self.register('Michael', 'michael@realpython.com', 'python', 'python')
         self.assertIn('Oh no! That username and/or email already exist.', response.data)
+
+    def test_user_registration_field_errors(self):
+        response = self.register(
+                'Michael', 'michael@python.com', 'python', '')
+        self.assertIn('This field is required.', response.data)
 
     def logout(self):
         return self.app.get('logout/', follow_redirects=True)

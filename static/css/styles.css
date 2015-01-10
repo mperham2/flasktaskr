@@ -2,7 +2,8 @@
 
 body {
     font-family: sans-serif;
-    background: #eee;
+    background: #ffffff;
+    padding: 60px 0px;
 }
 
 a, h1, h2 {
@@ -61,10 +62,14 @@ h2 {
     padding: 0.5em;
 }
 
+.footer {
+    padding-top: 30px;
+}
+
 .error {
     color:red;
     font-size: .8em;
-    background-color: #ffffff;
+    /*background-color: #ffffff;*/
     /*background: #F0D6D6;*/
     /*padding: 0.5em;*/
 }
@@ -120,3 +125,5 @@ h2 {
     text-decoration:none;
     position:relative;
 }
+
+

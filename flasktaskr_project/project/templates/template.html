@@ -1,9 +1,13 @@
+<!-- project/templates/template.html -->
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
         <title>Welcome to FlaskTaskr!!</title>
         <!-- styles -->
         <link href="http://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/yeti/bootstrap.min.css" rel="stylesheet">
@@ -26,9 +30,9 @@
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                     {% if not session.logged_in %}
-                        <li><a href="/register">Signup</a></li>
+                        <li><a href="{{ url_for('users.register') }}">Signup</a></li>
                     {% else %}
-                        <li><a href="/logout">Signout</a></li>
+                        <li><a href="{{ url_for('users.logout') }}">Signout</a></li>
                     {% endif %}
                     </ul>
                 </div><!--/.nav-collapse -->

@@ -3,9 +3,9 @@
 import os
 import unittest
 
-from views import app, db
+from project import app, db, bcrypt
 from config import basedir
-from models import User
+from project.models import Task, User
 
 TEST_DB = 'test.db'
 
@@ -33,19 +33,19 @@ class AllTests(unittest.TestCase):
 #############################
 
     def create_user(self, name, email, password):
-        new_user = User(name=name, email=email, password=password)
+        new_user = User(name=name, email=email, password=bcrypt.generate_password_hash(password))
         db.session.add(new_user)
         db.session.commit()
 
     def login(self, name, password):
-        return self.app.post('/', data=dict(
+        return self.app.post('users/', data=dict(
                              name=name, password=password), follow_redirects=True)
 
     def logout(self):
-        return self.app.get('logout/', follow_redirects=True)
+        return self.app.get('users/logout/', follow_redirects=True)
 
     def register(self, name, email, password, confirm):
-        return self.app.post('register/', data=dict(name=name, email=email, password=password, confirm=confirm), follow_redirects=True)
+        return self.app.post('users/register/', data=dict(name=name, email=email, password=password, confirm=confirm), follow_redirects=True)
 
     def create_user_1(self):
         return self.register('Michael', 'michael@realpython.com', 'python', 'python')
@@ -53,11 +53,18 @@ class AllTests(unittest.TestCase):
     def create_user_2(self):
         return self.register('Fletcher', 'fletcher@realpython.com', 'python101', 'python101')
 
+
+    def login_user_1(self):
+        self.login('Michael', 'python')
+
+    def login_user_2(self):
+        self.login('Fletcher', 'python101')
+
     def create_admin_user(self):
         new_user=User(
                       name='Superman',
                       email='admin@realpython.com',
-                      password='allpowerful',
+                      password=bcrypt.generate_password_hash('allpowerful'),
                       role='admin')
         db.session.add(new_user)
         db.session.commit()
@@ -94,7 +101,7 @@ class AllTests(unittest.TestCase):
 
 
     def test_form_is_present_on_login_page(self):
-        response = self.app.get('/')
+        response = self.app.get('users/')
         self.assertEquals(response.status_code, 200)
         self.assertIn('Please sign in to access your task list', response.data)
 
@@ -117,16 +124,16 @@ class AllTests(unittest.TestCase):
         self.assertIn('Invalid username or password.', response.data)
 
     def test_form_is_present_on_register_page(self):
-        response = self.app.get('register/')
+        response = self.app.get('users/register/')
         self.assertEquals(response.status_code, 200)
         self.assertIn('Please register to start a task list',
                       response.data)
 
     def test_duplicate_user_registration_throws_error(self):
-        self.app.get('register/', follow_redirects=True)
+        self.app.get('users/register/', follow_redirects=True)
         response = self.create_user_1()
         # self.register('Michael', 'michael@realpython.com', 'python', 'python')
-        self.app.get('register/', follow_redirects=True)
+        self.app.get('users/register/', follow_redirects=True)
         response = self.create_user_1()
         # self.register('Michael', 'michael@realpython.com', 'python', 'python')
         self.assertIn('Oh no! That username and/or email already exist.', response.data)
@@ -154,7 +161,6 @@ class AllTests(unittest.TestCase):
                         "Mike",
                        "Mike@mike.com",
                        "mikes"
-
                    )
         )
         db.session.commit()
@@ -163,6 +169,11 @@ class AllTests(unittest.TestCase):
         for user in users:
             self.assertEquals(user.role, 'user')
 
+    def test_task_template_displays_logged_in_user_name(self):
+        self.create_user_2()
+        self.login_user_2()
+        response = self.app.get('tasks/tasks/', follow_redirects=True)
+        self.assertIn('Fletcher', response.data)
 
 
 if __name__ == "__main__":

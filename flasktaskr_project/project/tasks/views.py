@@ -30,6 +30,7 @@ tasks_blueprint = Blueprint(
 @tasks_blueprint.route('/tasks/')
 @login_required
 def tasks():
+    print session['name']
     open_tasks = db.session.query(Task).filter_by(status='1')\
         .order_by(Task.due_date.asc())
     closed_tasks = db.session.query(Task)\
@@ -38,7 +39,8 @@ def tasks():
         'tasks.html',
         form=AddTaskForm(request.form),
         open_tasks=open_tasks,
-        closed_tasks=closed_tasks
+        closed_tasks=closed_tasks,
+        username=session['name']
     )
 
 # Add new tasks:
